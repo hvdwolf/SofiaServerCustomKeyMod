@@ -10,6 +10,7 @@ import de.robv.android.xposed.callbacks.XC_LoadPackage.LoadPackageParam;
 import static de.robv.android.xposed.XposedHelpers.getBooleanField;
 import static de.robv.android.xposed.XposedHelpers.getByteField;
 import static de.robv.android.xposed.XposedHelpers.getIntField;
+import static de.robv.android.xposed.XposedHelpers.assetAsByteArray;
 import static de.robv.android.xposed.XposedHelpers.getParameterTypes;
 import static de.robv.android.xposed.XposedHelpers.getObjectField;
 import static de.robv.android.xposed.XposedHelpers.getStaticObjectField;
@@ -75,12 +76,15 @@ public class SofiaServerCustomKeyMod implements IXposedHookLoadPackage {
 			}
 		});
 
-/*		findAndHookMethod("com.syu.ms.dev.ReceiverMcu", lpparam.classLoader, "onHandle", byte[].class, int.class, int.class, new XC_MethodHook() {
+		findAndHookMethod("com.syu.ms.dev.ReceiverMcu", lpparam.classLoader, "onHandle", byte[].class, int.class, int.class, new XC_MethodHook() {
 			@Override
 			protected void beforeHookedMethod(XC_MethodHook.MethodHookParam param) throws Throwable {
-				byte[] data  = getByteField(param.thisObject, "byte[].class");
-				int start = getIntField(param.thisObject, "start");
-				int length = getIntField(param.thisObject, "length");
+				//byte[] data  = getByteField(param.thisObject, "byte[].class");
+				byte[] data =  (byte[]) param.args[0];
+				/* int start = getIntField(param.thisObject, "start");
+				int length = getIntField(param.thisObject, "length"); */
+				int start = (int) param.args[1];
+				int length = (int) param.args[2];
 				byte b = data[start];
 
 				Log.d(TAG, "MEDIA button; Execute the Media action to the launcher.sh");
@@ -88,7 +92,7 @@ public class SofiaServerCustomKeyMod implements IXposedHookLoadPackage {
 				//IReceiverEx receiver; //Infra Red receiver??? if so, simply skip.
 			}
 		});
-*/
+
 
 	}
 
