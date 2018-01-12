@@ -2,6 +2,7 @@ package org.hvdw.sofiaservercustomkeymod;
 
 import android.util.Log;
 
+import de.robv.android.xposed.XposedBridge;
 import static de.robv.android.xposed.XposedHelpers.findAndHookMethod;
 import de.robv.android.xposed.IXposedHookLoadPackage;
 import de.robv.android.xposed.XC_MethodHook;
@@ -20,12 +21,13 @@ public class SofiaServerCustomKeyMod implements IXposedHookLoadPackage {
 	public static final String TAG = "SofiaServerCustomKeyMod";
 	// The variables I need from SofiaServer
 	public void handleLoadPackage(XC_LoadPackage.LoadPackageParam lpparam) throws Throwable {
-
+		XposedBridge.log("Loaded app: " + lpparam.packageName);
 		if (!lpparam.packageName.equals("com.syu.ms")) return;
 
 		findAndHookMethod("app.HandlerApp", lpparam.classLoader, "wakeup", new XC_MethodHook() {
 			@Override
 			protected void afterHookedMethod(XC_MethodHook.MethodHookParam param) throws Throwable {
+				XposedBridge.log(TAG + " Execute the wakeup action to the launcher.sh");
 				Log.d(TAG, "Execute the wakeup action to the launcher.sh");
 				onItemSelectedp(99);
 			}
@@ -33,31 +35,43 @@ public class SofiaServerCustomKeyMod implements IXposedHookLoadPackage {
 
 
 		findAndHookMethod("module.main.HandlerMain", lpparam.classLoader, "mcuKeyBtPhone", new XC_MethodHook() {
-			protected void replaceHookedMethod(XC_MethodHook.MethodHookParam param) throws Throwable {
+			@Override
+			protected void beforeHookedMethod(XC_MethodHook.MethodHookParam param) throws Throwable {
+				XposedBridge.log(TAG + " Execute the mcuKeyBtPhone action to the launcher.sh");
 				Log.d(TAG, "Execute the mcuKeyBtPhone action to the launcher.sh");
 				onItemSelectedp(27);
+				param.setResult(null);
 			}
 		});
 
 		findAndHookMethod("module.main.HandlerMain", lpparam.classLoader, "mcuKeyNavi", new XC_MethodHook() {
-			protected void replaceHookedMethod(XC_MethodHook.MethodHookParam param) throws Throwable {
+			@Override
+			protected void beforeHookedMethod(XC_MethodHook.MethodHookParam param) throws Throwable {
+				XposedBridge.log(TAG + " Execute the mcuKeyNavi action to the launcher.sh");
 				Log.d(TAG, "Execute the mcuKeyNavi action to the launcher.sh");
 				onItemSelectedp(9);
+				param.setResult(null);
 			}
 		});
 
 		findAndHookMethod("module.main.HandlerMain", lpparam.classLoader, "mcuKeyBand", new XC_MethodHook() {
-			protected void replaceHookedMethod(XC_MethodHook.MethodHookParam param) throws Throwable {
+			@Override
+			protected void beforeHookedMethod(XC_MethodHook.MethodHookParam param) throws Throwable {
+				XposedBridge.log(TAG + " Execute the mcuKeyBand (Radio) action to the launcher.sh");
 				Log.d(TAG, "Execute the mcuKeyBand (Radio) action to the launcher.sh");
 				onItemSelectedp(34);
+				param.setResult(null);
 			}
 		});
 
 
 		findAndHookMethod("module.main.HandlerMain", lpparam.classLoader, "mcuKeyMode", new XC_MethodHook() {
-			protected void replaceHookedMethod(XC_MethodHook.MethodHookParam param) throws Throwable {
+			@Override
+			protected void beforeHookedMethod(XC_MethodHook.MethodHookParam param) throws Throwable {
+				XposedBridge.log(TAG + " Execute the Source/Mode action to the launcher.sh");
 				Log.d(TAG, "Execute the Source/Mode action to the launcher.sh");
 				onItemSelectedp(37);
+				param.setResult(null);
 			}
 		});
 
@@ -72,9 +86,11 @@ public class SofiaServerCustomKeyMod implements IXposedHookLoadPackage {
 				int length = (int) param.args[2];
 				byte b = data[start];
 
+				XposedBridge.log(TAG + " MEDIA button; Execute the Media action to the launcher.sh");
 				Log.d(TAG, "MEDIA button; Execute the Media action to the launcher.sh");
 				keytrace2(b & 255, data[start + 1] & 255, data[start + 2] & 255, data[start + 3] & 255);
 				//IReceiverEx receiver; //Infra Red receiver??? if so, simply skip.
+				param.setResult(null);
 			}
 		});
 
