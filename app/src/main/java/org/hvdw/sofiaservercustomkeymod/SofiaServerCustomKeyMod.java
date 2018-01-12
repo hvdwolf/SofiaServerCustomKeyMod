@@ -1,4 +1,4 @@
-package org.hvdw.nokillsofiaserver;
+package org.hvdw.sofiaservercustomkeymod;
 
 import android.util.Log;
 
@@ -23,7 +23,7 @@ public class SofiaServerCustomKeyMod implements IXposedHookLoadPackage {
 
 		if (!lpparam.packageName.equals("com.syu.ms")) return;
 
-		findAndHookMethod("com.syu.ms.app.HandlerApp", lpparam.classLoader, "wakeup", new XC_MethodHook() {
+		findAndHookMethod("app.HandlerApp", lpparam.classLoader, "wakeup", new XC_MethodHook() {
 			@Override
 			protected void afterHookedMethod(XC_MethodHook.MethodHookParam param) throws Throwable {
 				Log.d(TAG, "Execute the wakeup action to the launcher.sh");
@@ -32,36 +32,21 @@ public class SofiaServerCustomKeyMod implements IXposedHookLoadPackage {
 		});
 
 
-		findAndHookMethod("com.syu.ms.module.main.HandlerMain", lpparam.classLoader, "mcuKeyBtPhone", new XC_MethodHook() {
+		findAndHookMethod("module.main.HandlerMain", lpparam.classLoader, "mcuKeyBtPhone", new XC_MethodHook() {
 			protected void replaceHookedMethod(XC_MethodHook.MethodHookParam param) throws Throwable {
 				Log.d(TAG, "Execute the mcuKeyBtPhone action to the launcher.sh");
 				onItemSelectedp(27);
 			}
 		});
 
-		findAndHookMethod("com.syu.ms.module.main.HandlerMain", lpparam.classLoader, "mcuKeyNavi", new XC_MethodHook() {
+		findAndHookMethod("module.main.HandlerMain", lpparam.classLoader, "mcuKeyNavi", new XC_MethodHook() {
 			protected void replaceHookedMethod(XC_MethodHook.MethodHookParam param) throws Throwable {
 				Log.d(TAG, "Execute the mcuKeyNavi action to the launcher.sh");
 				onItemSelectedp(9);
 			}
 		});
 
-		findAndHookMethod("com.syu.ms.util.ToolkitPlatform", lpparam.classLoader, "accStatusFor3Others", new XC_MethodHook() {
-			@Override
-			protected void afterHookedMethod(XC_MethodHook.MethodHookParam param) throws Throwable {
-				Log.d(TAG, "Execute the accStatusFor3Others action to the launcher.sh");
-				int accOn = getIntField(param.thisObject, "accOn");
-				if (accOn != 0) {
-					Log.d(TAG, "ACC_ON command received");
-					onItemSelectedp(97);
-					return;
-				}
-				Log.d(TAG, "ACC_OFF command received");
-				onItemSelectedp(98);
-			}
-		});
-
-		findAndHookMethod("com.syu.ms.module.main.HandlerMain", lpparam.classLoader, "mcuKeyBand", new XC_MethodHook() {
+		findAndHookMethod("module.main.HandlerMain", lpparam.classLoader, "mcuKeyBand", new XC_MethodHook() {
 			protected void replaceHookedMethod(XC_MethodHook.MethodHookParam param) throws Throwable {
 				Log.d(TAG, "Execute the mcuKeyBand (Radio) action to the launcher.sh");
 				onItemSelectedp(34);
@@ -69,14 +54,14 @@ public class SofiaServerCustomKeyMod implements IXposedHookLoadPackage {
 		});
 
 
-		findAndHookMethod("com.syu.ms.module.main.HandlerMain", lpparam.classLoader, "mcuKeyMode", new XC_MethodHook() {
+		findAndHookMethod("module.main.HandlerMain", lpparam.classLoader, "mcuKeyMode", new XC_MethodHook() {
 			protected void replaceHookedMethod(XC_MethodHook.MethodHookParam param) throws Throwable {
 				Log.d(TAG, "Execute the Source/Mode action to the launcher.sh");
 				onItemSelectedp(37);
 			}
 		});
 
-		findAndHookMethod("com.syu.ms.dev.ReceiverMcu", lpparam.classLoader, "onHandle", byte[].class, int.class, int.class, new XC_MethodHook() {
+		findAndHookMethod("dev.ReceiverMcu", lpparam.classLoader, "onHandle", byte[].class, int.class, int.class, new XC_MethodHook() {
 			@Override
 			protected void beforeHookedMethod(XC_MethodHook.MethodHookParam param) throws Throwable {
 				//byte[] data  = getByteField(param.thisObject, "byte[].class");
@@ -93,6 +78,21 @@ public class SofiaServerCustomKeyMod implements IXposedHookLoadPackage {
 			}
 		});
 
+/*		findAndHookMethod("util.ToolkitPlatform", lpparam.classLoader, "accStatusFor3Others", new XC_MethodHook() {
+			@Override
+			protected void afterHookedMethod(XC_MethodHook.MethodHookParam param) throws Throwable {
+				Log.d(TAG, "Execute the accStatusFor3Others action to the launcher.sh");
+				int accOn = getIntField(param.thisObject, "accOn");
+				if (accOn != 0) {
+					Log.d(TAG, "ACC_ON command received");
+					onItemSelectedp(97);
+					return;
+				}
+				Log.d(TAG, "ACC_OFF command received");
+				onItemSelectedp(98);
+			}
+		});
+*/
 
 	}
 
