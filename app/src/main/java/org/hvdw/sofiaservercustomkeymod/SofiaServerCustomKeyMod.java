@@ -140,7 +140,7 @@ public class SofiaServerCustomKeyMod implements IXposedHookLoadPackage {
 		}
 	};
 
-	public static void keytrace2(int input, int input2, int input3, int input4) {
+/*	public static void keytrace2(int input, int input2, int input3, int input4) {
 		if (input == 1 && input2 == 0 && input3 == 16 && input4 == 80) {
 			Log.d(TAG, "DVD button pressed; Execute the DVD action to the launcher.sh");
 			onItemSelectedp(31);
@@ -161,7 +161,7 @@ public class SofiaServerCustomKeyMod implements IXposedHookLoadPackage {
 			e.printStackTrace();
 		}
 	}
-
+*/
 	public void startNewActivity(Context context, String packageName) {
 		Intent intent = context.getPackageManager().getLaunchIntentForPackage(packageName);
 		//if (intent == null) {
