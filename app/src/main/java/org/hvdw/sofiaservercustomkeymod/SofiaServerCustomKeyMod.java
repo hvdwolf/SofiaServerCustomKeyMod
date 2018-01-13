@@ -1,6 +1,11 @@
 package org.hvdw.sofiaservercustomkeymod;
 
 import android.util.Log;
+import android.content.Intent;
+import android.app.Activity;
+import android.content.pm.PackageManager;
+import android.content.Context;
+import java.net.URI;
 
 import de.robv.android.xposed.XposedBridge;
 import static de.robv.android.xposed.XposedHelpers.findAndHookMethod;
@@ -19,6 +24,7 @@ import static de.robv.android.xposed.XposedHelpers.setIntField;
 
 public class SofiaServerCustomKeyMod implements IXposedHookLoadPackage {
 	public static final String TAG = "SofiaServerCustomKeyMod";
+	private Context context;
 	// The variables I need from SofiaServer
 	public void handleLoadPackage(XC_LoadPackage.LoadPackageParam lpparam) throws Throwable {
 		XposedBridge.log("Loaded app: " + lpparam.packageName);
@@ -27,8 +33,8 @@ public class SofiaServerCustomKeyMod implements IXposedHookLoadPackage {
 		findAndHookMethod("app.HandlerApp", lpparam.classLoader, "wakeup", new XC_MethodHook() {
 			@Override
 			protected void afterHookedMethod(XC_MethodHook.MethodHookParam param) throws Throwable {
-				XposedBridge.log(TAG + " Execute the wakeup action to the launcher.sh");
-				Log.d(TAG, "Execute the wakeup action to the launcher.sh");
+				XposedBridge.log(TAG + " Execute the RESUME action to the launcher.sh");
+				Log.d(TAG, "Execute the RESUME action to the launcher.sh");
 				onItemSelectedp(99);
 			}
 		});
@@ -47,8 +53,8 @@ public class SofiaServerCustomKeyMod implements IXposedHookLoadPackage {
 		findAndHookMethod("module.main.HandlerMain", lpparam.classLoader, "mcuKeyNavi", new XC_MethodHook() {
 			@Override
 			protected void beforeHookedMethod(XC_MethodHook.MethodHookParam param) throws Throwable {
-				XposedBridge.log(TAG + " Execute the mcuKeyNavi action to the launcher.sh");
-				Log.d(TAG, "Execute the mcuKeyNavi action to the launcher.sh");
+				XposedBridge.log(TAG + " mcuKeyNavi  pressed; forward action to the launcher.sh");
+				Log.d(TAG, "mcuKeyNavi pressed; forward action  to the launcher.sh");
 				onItemSelectedp(9);
 				param.setResult(null);
 			}
@@ -57,9 +63,13 @@ public class SofiaServerCustomKeyMod implements IXposedHookLoadPackage {
 		findAndHookMethod("module.main.HandlerMain", lpparam.classLoader, "mcuKeyBand", new XC_MethodHook() {
 			@Override
 			protected void beforeHookedMethod(XC_MethodHook.MethodHookParam param) throws Throwable {
-				XposedBridge.log(TAG + " Execute the mcuKeyBand (Radio) action to the launcher.sh");
-				Log.d(TAG, "Execute the mcuKeyBand (Radio) action to the launcher.sh");
+				XposedBridge.log(TAG + " mcuKeyBand (Radio) pressed; forward action to the launcher.sh");
+				Log.d(TAG, "mcuKeyBand (Radio) pressed; forward action to the launcher.sh");
 				onItemSelectedp(34);
+				//PackageManager pm = context.getPackageManager();
+				//Intent LaunchIntent = pm.getLaunchIntentForPackage("com.generalmagic.magicearth");
+				//content.startActivity( LaunchIntent );
+				//startNewActivity(context, "com.generalmagic.magicearth");
 				param.setResult(null);
 			}
 		});
@@ -68,47 +78,54 @@ public class SofiaServerCustomKeyMod implements IXposedHookLoadPackage {
 		findAndHookMethod("module.main.HandlerMain", lpparam.classLoader, "mcuKeyMode", new XC_MethodHook() {
 			@Override
 			protected void beforeHookedMethod(XC_MethodHook.MethodHookParam param) throws Throwable {
-				XposedBridge.log(TAG + " Execute the Source/Mode action to the launcher.sh");
-				Log.d(TAG, "Execute the Source/Mode action to the launcher.sh");
+				XposedBridge.log(TAG + " Source/Mode pressed; forward action  to the launcher.sh");
+				Log.d(TAG, "Source/Mode pressed; forward action  to the launcher.sh");
 				onItemSelectedp(37);
 				param.setResult(null);
 			}
 		});
 
-		findAndHookMethod("dev.ReceiverMcu", lpparam.classLoader, "onHandle", byte[].class, int.class, int.class, new XC_MethodHook() {
+
+		findAndHookMethod("util.JumpPage", lpparam.classLoader, "audioPlayer", new XC_MethodHook() {
 			@Override
 			protected void beforeHookedMethod(XC_MethodHook.MethodHookParam param) throws Throwable {
-				//byte[] data  = getByteField(param.thisObject, "byte[].class");
-				byte[] data =  (byte[]) param.args[0];
-				/* int start = getIntField(param.thisObject, "start");
-				int length = getIntField(param.thisObject, "length"); */
-				int start = (int) param.args[1];
-				int length = (int) param.args[2];
-				byte b = data[start];
-
-				XposedBridge.log(TAG + " MEDIA button; Execute the Media action to the launcher.sh");
-				Log.d(TAG, "MEDIA button; Execute the Media action to the launcher.sh");
-				keytrace2(b & 255, data[start + 1] & 255, data[start + 2] & 255, data[start + 3] & 255);
-				//IReceiverEx receiver; //Infra Red receiver??? if so, simply skip.
+				XposedBridge.log(TAG + " Media button pressed; forward action  to the launcher.sh");
+				Log.d(TAG, "Media button pressed; forward action  to the launcher.sh");
+				onItemSelectedp(33);
 				param.setResult(null);
 			}
 		});
 
-/*		findAndHookMethod("util.ToolkitPlatform", lpparam.classLoader, "accStatusFor3Others", new XC_MethodHook() {
+		findAndHookMethod("util.JumpPage", lpparam.classLoader, "dvd", new XC_MethodHook() {
 			@Override
-			protected void afterHookedMethod(XC_MethodHook.MethodHookParam param) throws Throwable {
-				Log.d(TAG, "Execute the accStatusFor3Others action to the launcher.sh");
-				int accOn = getIntField(param.thisObject, "accOn");
-				if (accOn != 0) {
-					Log.d(TAG, "ACC_ON command received");
-					onItemSelectedp(97);
-					return;
-				}
-				Log.d(TAG, "ACC_OFF command received");
-				onItemSelectedp(98);
+			protected void beforeHookedMethod(XC_MethodHook.MethodHookParam param) throws Throwable {
+				XposedBridge.log(TAG + " DVD button pressed; forward action  to the launcher.sh");
+				Log.d(TAG, "DVD button pressed; forward action  to the launcher.sh");
+				onItemSelectedp(31);
+				param.setResult(null);
 			}
 		});
-*/
+
+
+		findAndHookMethod("util.JumpPage", lpparam.classLoader, "broadcastByIntentName", new XC_MethodHook() {
+			@Override
+			protected void afterHookedMethod(XC_MethodHook.MethodHookParam param) throws Throwable {
+				String actionName = (String) param.args[0];
+				XposedBridge.log(TAG + " broadcastByIntentName in util.JumpPage afterHooked " + actionName);
+				Log.d(TAG, "broadcastByIntentName in util.JumpPage afterHooked " + actionName);
+				if (actionName == "com.glsx.boot.ACCON") {
+					Log.d(TAG, "ACC_ON command received");
+					XposedBridge.log(TAG + " ACC_ON command received");
+					onItemSelectedp(97);
+				}
+				if (actionName == "com.glsx.boot.ACCOFF") {
+					Log.d(TAG, "ACC_OFF command received");
+					XposedBridge.log(TAG + " ACC_OFF command received");
+					onItemSelectedp(98);
+				}
+			}
+		});
+
 
 	}
 
@@ -143,6 +160,17 @@ public class SofiaServerCustomKeyMod implements IXposedHookLoadPackage {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+
+	public void startNewActivity(Context context, String packageName) {
+		Intent intent = context.getPackageManager().getLaunchIntentForPackage(packageName);
+		//if (intent == null) {
+		//	// Bring user to the market or let them choose an app?
+		//	intent = new Intent(Intent.ACTION_VIEW);
+		//	intent.setData(new Uri.parse("market://details?id=" + packageName));
+		//}
+		intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+		context.startActivity(intent);
 	}
 
 }
