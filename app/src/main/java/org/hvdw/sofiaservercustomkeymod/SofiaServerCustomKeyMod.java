@@ -107,7 +107,7 @@ public class SofiaServerCustomKeyMod implements IXposedHookLoadPackage {
 		});
 
 
-		findAndHookMethod("util.JumpPage", lpparam.classLoader, "broadcastByIntentName", new XC_MethodHook() {
+		findAndHookMethod("util.JumpPage", lpparam.classLoader, "broadcastByIntentName", String.class, new XC_MethodHook() {
 			@Override
 			protected void afterHookedMethod(XC_MethodHook.MethodHookParam param) throws Throwable {
 				String actionName = (String) param.args[0];
