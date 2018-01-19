@@ -106,6 +106,26 @@ public class SofiaServerCustomKeyMod implements IXposedHookLoadPackage {
 			}
 		});
 
+		findAndHookMethod("bsp.HandlerBspKey", lpparam.classLoader, "bspKeyEject", new XC_MethodHook() {
+			@Override
+			protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
+				XposedBridge.log(TAG + " EJECT; forward action  to the launcher.sh");
+				Log.d(TAG, "EJECT button pressed; forward action  to the launcher.sh");
+				onItemSelectedp(32);
+				param.setResult(null);
+			}
+		});
+
+/* Not correct
+		findAndHookMethod("bsp.HandlerBspKey", lpparam.classLoader, "bspKeyMute", new XC_MethodHook() {
+			@Override
+			protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
+				XposedBridge.log(TAG + " MUTE; forward action  to the launcher.sh");
+				Log.d(TAG, "MUTE button pressed; forward action  to the launcher.sh");
+				onItemSelectedp(32);
+				param.setResult(null);
+			}
+		}); */
 
 		findAndHookMethod("util.JumpPage", lpparam.classLoader, "broadcastByIntentName", String.class, new XC_MethodHook() {
 			@Override
