@@ -106,7 +106,7 @@ public class SofiaServerCustomKeyMod implements IXposedHookLoadPackage {
 			}
 		});
 
-		findAndHookMethod("bsp.HandlerBspKey", lpparam.classLoader, "bspKeyEject", new XC_MethodHook() {
+		findAndHookMethod("bsp.HandlerBspKey", lpparam.classLoader, "bspKeyEject", int.class, new XC_MethodHook() {
 			@Override
 			protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
 				XposedBridge.log(TAG + " EJECT; forward action  to the launcher.sh");
