@@ -5,7 +5,9 @@ import android.content.Intent;
 import android.app.Activity;
 import android.content.pm.PackageManager;
 import android.content.Context;
-import java.net.URI;
+import android.content.Intent;
+
+import android.net.Uri;
 
 import de.robv.android.xposed.XposedBridge;
 import static de.robv.android.xposed.XposedHelpers.findAndHookMethod;
@@ -184,11 +186,13 @@ public class SofiaServerCustomKeyMod implements IXposedHookLoadPackage {
 */
 	public void startNewActivity(Context context, String packageName) {
 		Intent intent = context.getPackageManager().getLaunchIntentForPackage(packageName);
-		//if (intent == null) {
-		//	// Bring user to the market or let them choose an app?
-		//	intent = new Intent(Intent.ACTION_VIEW);
-		//	intent.setData(new Uri.parse("market://details?id=" + packageName));
-		//}
+		if (intent == null) {
+			// Bring user to the market or let them choose an app?
+			Intent intnt = new Intent(Intent.ACTION_VIEW);
+			intnt.setData(Uri.parse("market://details?id=" + packageName));
+			//Intent intent= new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + packageName));
+			//context.startActivity(intent);
+		}
 		intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 		context.startActivity(intent);
 	}
