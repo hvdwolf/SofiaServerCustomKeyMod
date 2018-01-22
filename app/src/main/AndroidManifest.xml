@@ -16,7 +16,7 @@
             android:value="true" />
         <meta-data
             android:name="xposeddescription"
-            android:value="This captures the hardware buttons from the SofiaServer to be able to reprogram them" />
+            android:value="SofiaServer mod; Captures the hardware buttons from the unit to reprogram them; includes NoKill" />
         <meta-data
             android:name="xposedminversion"
             android:value="53" />

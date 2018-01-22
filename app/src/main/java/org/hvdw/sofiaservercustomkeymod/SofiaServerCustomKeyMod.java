@@ -32,6 +32,20 @@ public class SofiaServerCustomKeyMod implements IXposedHookLoadPackage {
 		XposedBridge.log("Loaded app: " + lpparam.packageName);
 		if (!lpparam.packageName.equals("com.syu.ms")) return;
 
+/**********************************************************************************************************************************************/
+		/* This is the No Kill function */
+		findAndHookMethod("app.ToolkitApp", lpparam.classLoader, "killAppWhenSleep", new XC_MethodHook() {
+			@Override
+			protected void beforeHookedMethod(XC_MethodHook.MethodHookParam param) throws Throwable {
+				XposedBridge.log(TAG + "skipping method killAppWhenSleep");
+				Log.d(TAG, "skipping method killAppWhenSleep");
+				param.setResult(null);
+			}
+		});
+
+
+/**********************************************************************************************************************************************/
+		/* Below are the captured key functions */
 		findAndHookMethod("app.HandlerApp", lpparam.classLoader, "wakeup", new XC_MethodHook() {
 			@Override
 			protected void afterHookedMethod(XC_MethodHook.MethodHookParam param) throws Throwable {
@@ -98,6 +112,7 @@ public class SofiaServerCustomKeyMod implements IXposedHookLoadPackage {
 			}
 		});
 
+/* Probably not correct either 
 		findAndHookMethod("util.JumpPage", lpparam.classLoader, "dvd", new XC_MethodHook() {
 			@Override
 			protected void beforeHookedMethod(XC_MethodHook.MethodHookParam param) throws Throwable {
@@ -107,7 +122,9 @@ public class SofiaServerCustomKeyMod implements IXposedHookLoadPackage {
 				param.setResult(null);
 			}
 		});
+*/
 
+/* Not correct eject and mute
 		findAndHookMethod("bsp.HandlerBspKey", lpparam.classLoader, "bspKeyEject", int.class, new XC_MethodHook() {
 			@Override
 			protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
@@ -118,7 +135,7 @@ public class SofiaServerCustomKeyMod implements IXposedHookLoadPackage {
 			}
 		});
 
-/* Not correct
+
 		findAndHookMethod("bsp.HandlerBspKey", lpparam.classLoader, "bspKeyMute", new XC_MethodHook() {
 			@Override
 			protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
@@ -128,6 +145,34 @@ public class SofiaServerCustomKeyMod implements IXposedHookLoadPackage {
 				param.setResult(null);
 			}
 		}); */
+
+		/* Previous DVD and eject option; try again but slightly different */
+		findAndHookMethod("com.syu.ms.dev.ReceiverMcu", lpparam.classLoader, "onHandle", byte[].class, int.class, int.class, new XC_MethodHook() {
+			@Override
+			protected void beforeHookedMethod(XC_MethodHook.MethodHookParam param) throws Throwable {
+				//byte[] data  = getByteField(param.thisObject, "byte[].class");
+				byte[] data =  (byte[]) param.args[0];
+				/* int start = getIntField(param.thisObject, "start");
+				int length = getIntField(param.thisObject, "length"); */
+				int start = (int) param.args[1];
+				int length = (int) param.args[2];
+				byte b = data[start];
+
+				Log.d(TAG, "DVD or eject button; Executed the Media action to the launcher.sh");
+				if ((b & 255) == 1 && (data[start + 1] & 255) == 0 && (data[start + 2] & 255) == 16 && (data[start + 3] & 255) == 80) {
+					XposedBridge.log(TAG + " DVD button pressed; forward action  to the launcher.sh");
+					Log.d(TAG, "DVD button pressed; forward action  to the launcher.sh");
+					onItemSelectedp(31);
+				}
+				if ((b & 255) == 1 && (data[start + 1] & 255) == 161 && (data[start + 2] & 255) == 2 && (data[start + 3] & 255) == 91) {
+					XposedBridge.log(TAG + " EJECT; forward action  to the launcher.sh");
+					Log.d(TAG, "EJECT button pressed; forward action  to the launcher.sh");
+					onItemSelectedp(32);
+				}
+				//keytrace2(b & 255, data[start + 1] & 255, data[start + 2] & 255, data[start + 3] & 255);
+				//IReceiverEx receiver; //Infra Red receiver??? if so, simply skip.
+			}
+		});
 
 		findAndHookMethod("util.JumpPage", lpparam.classLoader, "broadcastByIntentName", String.class, new XC_MethodHook() {
 			@Override
@@ -147,8 +192,8 @@ public class SofiaServerCustomKeyMod implements IXposedHookLoadPackage {
 				}
 			}
 		});
-
-
+		/* End of the capture key functions */
+/**********************************************************************************************************************************************/
 	}
 
 	public static void onItemSelectedp(int input) {
