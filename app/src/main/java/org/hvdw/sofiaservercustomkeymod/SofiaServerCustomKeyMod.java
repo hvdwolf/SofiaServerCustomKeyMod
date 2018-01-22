@@ -8,6 +8,9 @@ import android.content.Context;
 import android.content.Intent;
 
 import android.net.Uri;
+//import app.App;
+//import app.DataApp;
+//import app.ObjApp;
 
 import de.robv.android.xposed.XposedBridge;
 import static de.robv.android.xposed.XposedHelpers.findAndHookMethod;
@@ -27,6 +30,7 @@ import static de.robv.android.xposed.XposedHelpers.setIntField;
 public class SofiaServerCustomKeyMod implements IXposedHookLoadPackage {
 	public static final String TAG = "SofiaServerCustomKeyMod";
 	private Context context;
+	private static PackageManager pm;
 	// The variables I need from SofiaServer
 	public void handleLoadPackage(XC_LoadPackage.LoadPackageParam lpparam) throws Throwable {
 		XposedBridge.log("Loaded app: " + lpparam.packageName);
@@ -167,10 +171,14 @@ public class SofiaServerCustomKeyMod implements IXposedHookLoadPackage {
 				if ((b & 255) == 1 && (data[start + 1] & 255) == 161 && (data[start + 2] & 255) == 2 && (data[start + 3] & 255) == 91) {
 					XposedBridge.log(TAG + " EJECT; forward action  to the launcher.sh");
 					Log.d(TAG, "EJECT button pressed; forward action  to the launcher.sh");
-					onItemSelectedp(32);
+					// For the launcher.sh use the onItemSelectedp()
+					//onItemSelectedp(32);
+					// To directly start an app use the startActivityByPackageName( packageName)
+					// Later to be used via a preference screen
+					// like startActivityByPackageName(com.google.android.apps.maps)    Google Maps
+					// like startActivityByPackageName(com.syu.radio) Joying Radio
+					startNewActivity(context, "com.waze");					
 				}
-				//keytrace2(b & 255, data[start + 1] & 255, data[start + 2] & 255, data[start + 3] & 255);
-				//IReceiverEx receiver; //Infra Red receiver??? if so, simply skip.
 			}
 		});
 
@@ -235,11 +243,17 @@ public class SofiaServerCustomKeyMod implements IXposedHookLoadPackage {
 			// Bring user to the market or let them choose an app?
 			Intent intnt = new Intent(Intent.ACTION_VIEW);
 			intnt.setData(Uri.parse("market://details?id=" + packageName));
-			//Intent intent= new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + packageName));
-			//context.startActivity(intent);
 		}
-		intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-		context.startActivity(intent);
+		try {
+			//intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+			intent.addFlags(2097152);
+			intent.addFlags(268435456);
+			context.startActivity(intent);
+		} catch (Exception exception) {
+			Log.i(TAG, exception.getMessage());
+			XposedBridge.log(TAG + " " + exception.getMessage());
+		}
+
 	}
 
 }
