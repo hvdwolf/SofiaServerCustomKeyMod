@@ -29,7 +29,7 @@ import static de.robv.android.xposed.XposedHelpers.setIntField;
 
 public class SofiaServerCustomKeyMod implements IXposedHookLoadPackage {
 	public static final String TAG = "SofiaServerCustomKeyMod";
-	private Context context;
+	public static Context context;
 	private static PackageManager pm;
 	// The variables I need from SofiaServer
 	public void handleLoadPackage(XC_LoadPackage.LoadPackageParam lpparam) throws Throwable {
