@@ -2,21 +2,15 @@ package org.hvdw.sofiaservercustomkeymod;
 
 import android.util.Log;
 import android.content.Intent;
-import android.app.Activity;
-import android.content.pm.PackageManager;
 import android.content.Context;
-import android.content.Intent;
-
-import android.net.Uri;
-//import app.App;
-//import app.DataApp;
-//import app.ObjApp;
+import android.content.pm.PackageManager;
 
 import de.robv.android.xposed.XposedBridge;
 import static de.robv.android.xposed.XposedHelpers.findAndHookMethod;
 import de.robv.android.xposed.IXposedHookLoadPackage;
 import de.robv.android.xposed.XC_MethodHook;
 import de.robv.android.xposed.callbacks.XC_LoadPackage;
+/*
 import de.robv.android.xposed.callbacks.XC_LoadPackage.LoadPackageParam;
 import static de.robv.android.xposed.XposedHelpers.getBooleanField;
 import static de.robv.android.xposed.XposedHelpers.getByteField;
@@ -26,10 +20,11 @@ import static de.robv.android.xposed.XposedHelpers.getParameterTypes;
 import static de.robv.android.xposed.XposedHelpers.getObjectField;
 import static de.robv.android.xposed.XposedHelpers.getStaticObjectField;
 import static de.robv.android.xposed.XposedHelpers.setIntField;
+*/
 
 public class SofiaServerCustomKeyMod implements IXposedHookLoadPackage {
 	public static final String TAG = "SofiaServerCustomKeyMod";
-	public static Context context;
+	public Context context;
 	private static PackageManager pm;
 	// The variables I need from SofiaServer
 	public void handleLoadPackage(XC_LoadPackage.LoadPackageParam lpparam) throws Throwable {
@@ -75,7 +70,8 @@ public class SofiaServerCustomKeyMod implements IXposedHookLoadPackage {
 			protected void beforeHookedMethod(XC_MethodHook.MethodHookParam param) throws Throwable {
 				XposedBridge.log(TAG + " mcuKeyNavi  pressed; forward action to the launcher.sh");
 				Log.d(TAG, "mcuKeyNavi pressed; forward action  to the launcher.sh");
-				onItemSelectedp(9);
+				//onItemSelectedp(9);
+				startActivityByPackageName(context, "com.generalmagic.magicearth");
 				param.setResult(null);
 			}
 		});
@@ -172,12 +168,12 @@ public class SofiaServerCustomKeyMod implements IXposedHookLoadPackage {
 					XposedBridge.log(TAG + " EJECT; forward action  to the launcher.sh");
 					Log.d(TAG, "EJECT button pressed; forward action  to the launcher.sh");
 					// For the launcher.sh use the onItemSelectedp()
-					//onItemSelectedp(32);
+					onItemSelectedp(32);
 					// To directly start an app use the startActivityByPackageName( packageName)
 					// Later to be used via a preference screen
 					// like startActivityByPackageName(com.google.android.apps.maps)    Google Maps
 					// like startActivityByPackageName(com.syu.radio) Joying Radio
-					startNewActivity(context, "com.waze");					
+					//startActivityByPackageName(context, "com.waze");
 				}
 			}
 		});
@@ -204,7 +200,7 @@ public class SofiaServerCustomKeyMod implements IXposedHookLoadPackage {
 /**********************************************************************************************************************************************/
 	}
 
-	public static void onItemSelectedp(int input) {
+	private static void onItemSelectedp(int input) {
 		StringBuffer output = new StringBuffer();
 		String cmd = "/data/launcher.sh " + input + " ";
 		try {
@@ -237,7 +233,8 @@ public class SofiaServerCustomKeyMod implements IXposedHookLoadPackage {
 		}
 	}
 */
-	public void startNewActivity(Context context, String packageName) {
+	/* This one doesn't work
+	private void startNewActivity(Context context, String packageName) {
 		Intent intent = context.getPackageManager().getLaunchIntentForPackage(packageName);
 		if (intent == null) {
 			// Bring user to the market or let them choose an app?
@@ -254,6 +251,15 @@ public class SofiaServerCustomKeyMod implements IXposedHookLoadPackage {
 			XposedBridge.log(TAG + " " + exception.getMessage());
 		}
 
+	}
+*/
+
+	public void startActivityByPackageName(Context context, String packageName) {
+		PackageManager pManager = context.getPackageManager();
+		Intent intent = pManager.getLaunchIntentForPackage(packageName);
+		if (intent != null) {
+			context.startActivity(intent);
+		}
 	}
 
 }
