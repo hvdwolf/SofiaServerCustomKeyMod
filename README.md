@@ -9,14 +9,15 @@ This should replace the custom key mod mod from Gustden. It mimics the same beha
 * Wake_up/resume (key 99)
 * NAVI (key 9)
 * BAND (radio) (key 34)
+* DVD (key 31) (I don't have that hardware button)
+* Eject (key 32) (confirmed by gtx(aspec))
 
 **Working, but with strange side effects:**
 * MEDIA (33); Works as such but disables hardware keys for approx 1 minute, then mutes sound and unmutes sound (2-3 seconds), activates hardware keys again.
 
 **Untested:**
 * Phone/BT(key 27) (I don't have steering wheel keys)
-* DVD (key 31) (I don't have that hardware button) => might not be correct. SofiaServer has 2 functions for it ??
-* Eject (32) (I don't have that key)
+
 * SRC/Mode (37) (I don't have steering wheel keys)
 
 **ToDo list:**
