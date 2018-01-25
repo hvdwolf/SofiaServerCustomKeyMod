@@ -73,8 +73,8 @@ public class SofiaServerCustomKeyMod implements IXposedHookLoadPackage {
 				Log.d(TAG, "mcuKeyNavi pressed; forward action  to the launcher.sh");
 				//onItemSelectedp(9);
 				Context context = (Context) AndroidAppHelper.currentApplication();
-				//startActivityByPackageName(context, "com.generalmagic.magicearth");
-				startActivityByPackageName(context, "com.mapfactor.navigator");
+				startActivityByPackageName(context, "com.generalmagic.magicearth");
+				//startActivityByPackageName(context, "com.mapfactor.navigator");
 				param.setResult(null);
 			}
 		});
@@ -111,42 +111,8 @@ public class SofiaServerCustomKeyMod implements IXposedHookLoadPackage {
 			}
 		});
 
-/* Probably not correct either 
-		findAndHookMethod("util.JumpPage", lpparam.classLoader, "dvd", new XC_MethodHook() {
-			@Override
-			protected void beforeHookedMethod(XC_MethodHook.MethodHookParam param) throws Throwable {
-				XposedBridge.log(TAG + " DVD button pressed; forward action  to the launcher.sh");
-				Log.d(TAG, "DVD button pressed; forward action  to the launcher.sh");
-				onItemSelectedp(31);
-				param.setResult(null);
-			}
-		});
-*/
 
-/* Not correct eject and mute
-		findAndHookMethod("bsp.HandlerBspKey", lpparam.classLoader, "bspKeyEject", int.class, new XC_MethodHook() {
-			@Override
-			protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
-				XposedBridge.log(TAG + " EJECT; forward action  to the launcher.sh");
-				Log.d(TAG, "EJECT button pressed; forward action  to the launcher.sh");
-				onItemSelectedp(32);
-				param.setResult(null);
-			}
-		});
-
-
-		findAndHookMethod("bsp.HandlerBspKey", lpparam.classLoader, "bspKeyMute", new XC_MethodHook() {
-			@Override
-			protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
-				XposedBridge.log(TAG + " MUTE; forward action  to the launcher.sh");
-				Log.d(TAG, "MUTE button pressed; forward action  to the launcher.sh");
-				onItemSelectedp(32);
-				param.setResult(null);
-			}
-		}); */
-
-		/* Previous DVD and eject option; try again but slightly different */
-		findAndHookMethod("com.syu.ms.dev.ReceiverMcu", lpparam.classLoader, "onHandle", byte[].class, int.class, int.class, new XC_MethodHook() {
+		findAndHookMethod("dev.ReceiverMcu", lpparam.classLoader, "onHandle", byte[].class, int.class, int.class, new XC_MethodHook() {
 			@Override
 			protected void beforeHookedMethod(XC_MethodHook.MethodHookParam param) throws Throwable {
 				//byte[] data  = getByteField(param.thisObject, "byte[].class");
@@ -209,49 +175,6 @@ public class SofiaServerCustomKeyMod implements IXposedHookLoadPackage {
 			e.printStackTrace();
 		}
 	};
-
-/*	public static void keytrace2(int input, int input2, int input3, int input4) {
-		if (input == 1 && input2 == 0 && input3 == 16 && input4 == 80) {
-			Log.d(TAG, "DVD button pressed; Execute the DVD action to the launcher.sh");
-			onItemSelectedp(31);
-		}
-		if (input == 1 && input2 == 161 && input3 == 2 && input4 == 91) {
-			Log.d(TAG, "Eject button pressed; Execute the Eject action to the launcher.sh");
-			onItemSelectedp(32);
-		}
-	};
-
-	public static void sendKeyCode(int input) {
-		StringBuffer output = new StringBuffer();
-		String cmd = "input keyevent " + input + " ";
-		try {
-			Process p = Runtime.getRuntime().exec(cmd);
-			Log.d("MCUKEY", cmd);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-*/
-	/* This one doesn't work
-	private void startNewActivity(Context context, String packageName) {
-		Intent intent = context.getPackageManager().getLaunchIntentForPackage(packageName);
-		if (intent == null) {
-			// Bring user to the market or let them choose an app?
-			Intent intnt = new Intent(Intent.ACTION_VIEW);
-			intnt.setData(Uri.parse("market://details?id=" + packageName));
-		}
-		try {
-			//intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-			intent.addFlags(2097152);
-			intent.addFlags(268435456);
-			context.startActivity(intent);
-		} catch (Exception exception) {
-			Log.i(TAG, exception.getMessage());
-			XposedBridge.log(TAG + " " + exception.getMessage());
-		}
-
-	}
-*/
 
 	public void startActivityByPackageName(Context context, String packageName) {
 		PackageManager pManager = context.getPackageManager();
