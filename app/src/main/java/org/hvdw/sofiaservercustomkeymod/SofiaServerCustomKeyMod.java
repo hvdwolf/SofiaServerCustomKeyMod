@@ -4,6 +4,7 @@ import android.util.Log;
 import android.content.Intent;
 import android.content.Context;
 import android.content.pm.PackageManager;
+import android.app.AndroidAppHelper;
 
 import de.robv.android.xposed.XposedBridge;
 import static de.robv.android.xposed.XposedHelpers.findAndHookMethod;
@@ -24,9 +25,9 @@ import static de.robv.android.xposed.XposedHelpers.setIntField;
 
 public class SofiaServerCustomKeyMod implements IXposedHookLoadPackage {
 	public static final String TAG = "SofiaServerCustomKeyMod";
-	public Context context;
+	//public Context context;
 	private static PackageManager pm;
-	// The variables I need from SofiaServer
+
 	public void handleLoadPackage(XC_LoadPackage.LoadPackageParam lpparam) throws Throwable {
 		XposedBridge.log("Loaded app: " + lpparam.packageName);
 		if (!lpparam.packageName.equals("com.syu.ms")) return;
@@ -71,7 +72,9 @@ public class SofiaServerCustomKeyMod implements IXposedHookLoadPackage {
 				XposedBridge.log(TAG + " mcuKeyNavi  pressed; forward action to the launcher.sh");
 				Log.d(TAG, "mcuKeyNavi pressed; forward action  to the launcher.sh");
 				//onItemSelectedp(9);
-				startActivityByPackageName(context, "com.generalmagic.magicearth");
+				Context context = (Context) AndroidAppHelper.currentApplication();
+				//startActivityByPackageName(context, "com.generalmagic.magicearth");
+				startActivityByPackageName(context, "com.mapfactor.navigator");
 				param.setResult(null);
 			}
 		});
@@ -82,10 +85,6 @@ public class SofiaServerCustomKeyMod implements IXposedHookLoadPackage {
 				XposedBridge.log(TAG + " mcuKeyBand (Radio) pressed; forward action to the launcher.sh");
 				Log.d(TAG, "mcuKeyBand (Radio) pressed; forward action to the launcher.sh");
 				onItemSelectedp(34);
-				//PackageManager pm = context.getPackageManager();
-				//Intent LaunchIntent = pm.getLaunchIntentForPackage("com.generalmagic.magicearth");
-				//content.startActivity( LaunchIntent );
-				//startNewActivity(context, "com.generalmagic.magicearth");
 				param.setResult(null);
 			}
 		});
