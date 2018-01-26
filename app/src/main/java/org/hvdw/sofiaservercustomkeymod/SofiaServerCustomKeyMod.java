@@ -111,6 +111,18 @@ public class SofiaServerCustomKeyMod implements IXposedHookLoadPackage {
 			}
 		});
 
+		findAndHookMethod("util.JumpPage", lpparam.classLoader, "eq", new XC_MethodHook() {
+			@Override
+			protected void beforeHookedMethod(XC_MethodHook.MethodHookParam param) throws Throwable {
+				XposedBridge.log(TAG + " EQ button pressed; forward action  to the launcher.sh");
+				Log.d(TAG, "EQ button pressed; forward action  to the launcher.sh");
+				//onItemSelectedp(33);
+				Context context = (Context) AndroidAppHelper.currentApplication();
+				startActivityByPackageName(context, "com.google.android.googlequicksearchbox"); // Google Voice Search
+				param.setResult(null);
+			}
+		});
+
 
 		findAndHookMethod("dev.ReceiverMcu", lpparam.classLoader, "onHandle", byte[].class, int.class, int.class, new XC_MethodHook() {
 			@Override
@@ -123,7 +135,7 @@ public class SofiaServerCustomKeyMod implements IXposedHookLoadPackage {
 				int length = (int) param.args[2];
 				byte b = data[start];
 
-				Log.d(TAG, "DVD or eject button; Executed the Media action to the launcher.sh");
+				//Log.d(TAG, "DVD or eject button; Executed the Media action to the launcher.sh");
 				if ((b & 255) == 1 && (data[start + 1] & 255) == 0 && (data[start + 2] & 255) == 16 && (data[start + 3] & 255) == 80) {
 					XposedBridge.log(TAG + " DVD button pressed; forward action  to the launcher.sh");
 					Log.d(TAG, "DVD button pressed; forward action  to the launcher.sh");
@@ -132,13 +144,7 @@ public class SofiaServerCustomKeyMod implements IXposedHookLoadPackage {
 				if ((b & 255) == 1 && (data[start + 1] & 255) == 161 && (data[start + 2] & 255) == 2 && (data[start + 3] & 255) == 91) {
 					XposedBridge.log(TAG + " EJECT; forward action  to the launcher.sh");
 					Log.d(TAG, "EJECT button pressed; forward action  to the launcher.sh");
-					// For the launcher.sh use the onItemSelectedp()
 					onItemSelectedp(32);
-					// To directly start an app use the startActivityByPackageName( packageName)
-					// Later to be used via a preference screen
-					// like startActivityByPackageName(com.google.android.apps.maps)    Google Maps
-					// like startActivityByPackageName(com.syu.radio) Joying Radio
-					//startActivityByPackageName(context, "com.waze");
 				}
 			}
 		});
