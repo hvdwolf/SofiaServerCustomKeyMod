@@ -71,9 +71,9 @@ public class SofiaServerCustomKeyMod implements IXposedHookLoadPackage {
 			protected void beforeHookedMethod(XC_MethodHook.MethodHookParam param) throws Throwable {
 				XposedBridge.log(TAG + " mcuKeyNavi  pressed; forward action to the launcher.sh");
 				Log.d(TAG, "mcuKeyNavi pressed; forward action  to the launcher.sh");
-				//onItemSelectedp(9);
-				Context context = (Context) AndroidAppHelper.currentApplication();
-				startActivityByPackageName(context, "com.generalmagic.magicearth");
+				onItemSelectedp(9);
+				//Context context = (Context) AndroidAppHelper.currentApplication();
+				//startActivityByPackageName(context, "com.generalmagic.magicearth");
 				//startActivityByPackageName(context, "com.mapfactor.navigator");
 				param.setResult(null);
 			}
@@ -116,9 +116,9 @@ public class SofiaServerCustomKeyMod implements IXposedHookLoadPackage {
 			protected void beforeHookedMethod(XC_MethodHook.MethodHookParam param) throws Throwable {
 				XposedBridge.log(TAG + " EQ button pressed; forward action  to the launcher.sh");
 				Log.d(TAG, "EQ button pressed; forward action  to the launcher.sh");
-				//onItemSelectedp(33);
-				Context context = (Context) AndroidAppHelper.currentApplication();
-				startActivityByPackageName(context, "com.google.android.googlequicksearchbox"); // Google Voice Search
+				onItemSelectedp(33);
+				//Context context = (Context) AndroidAppHelper.currentApplication();
+				//startActivityByPackageName(context, "com.google.android.googlequicksearchbox"); // Google Voice Search
 				param.setResult(null);
 			}
 		});
