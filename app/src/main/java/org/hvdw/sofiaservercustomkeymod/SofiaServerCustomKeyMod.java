@@ -43,11 +43,11 @@ public class SofiaServerCustomKeyMod implements IXposedHookLoadPackage {
 			}
 		});
 
-		/* This should prevent the mute off audio channel 4 (alarm) which is used by Google voice for voice feedback */
+		/* This should prevent the mute of audio channel 4 (alarm) which is used by Google voice for voice feedback */
 		findAndHookMethod("app.ToolkitApp", lpparam.classLoader, "setStreamVol", int.class, int.class, new XC_MethodHook() {
 			@Override
 			protected void beforeHookedMethod(XC_MethodHook.MethodHookParam param) throws Throwable {
-				int stream= (int) param.args[0];
+				int stream = (int) param.args[0];
 				if (stream == 4) {
 					XposedBridge.log(TAG + " skipping alarm channel 4 mute");
 					Log.d(TAG, " skipping alarm channel 4 mute");
@@ -113,7 +113,7 @@ public class SofiaServerCustomKeyMod implements IXposedHookLoadPackage {
 		});
 
 
-		findAndHookMethod("util.JumpPage", lpparam.classLoader, "audioPlayer", new XC_MethodHook() {
+		findAndHookMethod("module.main.HandlerMain", lpparam.classLoader, "mcuKeyPlayer", new XC_MethodHook() {
 			@Override
 			protected void beforeHookedMethod(XC_MethodHook.MethodHookParam param) throws Throwable {
 				XposedBridge.log(TAG + " Media button pressed; forward action  to the launcher.sh");
@@ -163,7 +163,8 @@ public class SofiaServerCustomKeyMod implements IXposedHookLoadPackage {
 
 		findAndHookMethod("util.JumpPage", lpparam.classLoader, "broadcastByIntentName", String.class, new XC_MethodHook() {
 			@Override
-			protected void afterHookedMethod(XC_MethodHook.MethodHookParam param) throws Throwable {
+			protected void beforeHookedMethod(XC_MethodHook.MethodHookParam param) throws Throwable {
+//			protected void afterHookedMethod(XC_MethodHook.MethodHookParam param) throws Throwable {
 				String actionName = (String) param.args[0];
 				XposedBridge.log(TAG + " broadcastByIntentName in util.JumpPage afterHooked " + actionName);
 				Log.d(TAG, "broadcastByIntentName in util.JumpPage afterHooked " + actionName);
