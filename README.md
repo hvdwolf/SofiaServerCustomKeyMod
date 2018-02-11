@@ -23,8 +23,8 @@ The module that is under development is the XSofia Tweaker Xposed module.
 * double tap/triple tap of keys, meaning that you can "rotate" keys. For example: Your steering wheel BT or Mode/SRC button, can start the radio app on 1 tap, start a media player on 2 taps, or start the phone app on 3 taps.
 
 
-This Xposed module also contains the NoKill functionality. The SofiaServer kills almostall apps when going into deep-sleep. The NoKill option makes sure they are not killed.
+This Xposed module also contains the NoKill functionality. The SofiaServer kills almost all apps when going into deep-sleep. The NoKill option skips this "kill all apps" function.
 
-Note: Some apps prevent the unit from going into deep-sleep. The old SofiaServer simply killed these apps. This module doesn't do that. It means that the MCU can completely switch off the unit, resulting in a cold-boot upon switching on the contact.
+Note: Some apps prevent the unit from going into deep-sleep. The old SofiaServer simply killed these apps. This module doesn't do that. The MCU detects the apps keeping the CPU cores at higher frequency and can completely switch off the unit, resulting in a cold-boot upon switching on the contact.
 That is not the fault of this module. It is the fault of these bad behaving apps.
-A way to overcome this is to kill this specific bad behaving app on ACC_OFF event (key 98), and to start it on the ACC_ON event (key 97).
+A way to overcome this is to kill this specific bad behaving app(s) on ACC_OFF event (key 98), and to start them again on the ACC_ON event (key 97).
