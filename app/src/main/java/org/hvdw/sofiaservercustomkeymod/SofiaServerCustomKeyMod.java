@@ -68,7 +68,8 @@ public class SofiaServerCustomKeyMod implements IXposedHookLoadPackage {
 		});
 
 
-		findAndHookMethod("module.main.HandlerMain", lpparam.classLoader, "mcuKeyBtPhone", new XC_MethodHook() {
+		//findAndHookMethod("module.main.HandlerMain", lpparam.classLoader, "mcuKeyBtPhone", new XC_MethodHook() {
+		findAndHookMethod("util.JumpPage", lpparam.classLoader, "btPageDialByKey", new XC_MethodHook() {
 			@Override
 			protected void beforeHookedMethod(XC_MethodHook.MethodHookParam param) throws Throwable {
 				XposedBridge.log(TAG + " Execute the mcuKeyBtPhone action to the launcher.sh");
